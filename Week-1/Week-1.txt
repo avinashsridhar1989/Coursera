@@ -1,0 +1,232 @@
+CRYPTOGRAPHY COURSE WEEK - 1
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Content Protection: CSS/AACS
+Secure Communication: Web --> HTTPS, Wireless --> 802.11i WPA2, GSM, Bluetooth
+
+File Encryption: EFS, Truecrypt
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+TLS :
+
+1) Handshake Protocol --> Establish Shared Secret Key using Public Key Cryptography
+
+2) Record Layer: Transmit data using the shared secret key!
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+TX Side:
+
+m = message k = key known only to TX and RX
+
+!! Algorithm is public and known to everyone !!
+
+c = E(k,m)
+
+RX Side:
+
+m = D(k,c)
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+USE CASES:
+
+Single Use Key: One key for single purpose or one message. eg. One key used to encrypt one email.
+
+Multi Use Key: One key can be used to encrypt multiple files. Some more machinery is needed to ensure proper encryption.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+CRYPTO can do much more such as DIGITAL SIGNATURE:
+
+-> Digital Signature is a function of the data in the document.
+-> Course will cover how to construct the digital signature.
+
+Anonymous Communication:
+
+We use MIX NET, with sequence of proxies and the two end users don't even know who they are bi directionally communicating with.
+
+Anonymous Digital Cash: Spend a digital coin in a shop and shop won't know who the end user making the purchase is.
+**PROBLEM is DOUBLE SPENDING FRAUD**
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Unusual cryptography types:
+
+CRYPTO MAGIC:
+
+Where google runs a search on the encrypted query to return the encrypted search result. So google never knows the query that was searched by end user in first place!
+
+ZERO KNOWLEDGE (Proof of knowledge):
+
+TX SIDE:
+N = p.q
+
+RX SIDE:
+
+Use zero knowledge and know solution can be found without knowing p and q.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+STEPS OF CRYPTOGRAPHY:
+
+1) precisely specify the threat model.
+2) Propose a construction.
+3) Proove that breaking the construction under the threat model can be used to solve an underlying hard model.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+SYMMETRIC CIPHERS:
+
+Alice --> A and Bob --> B
+
+k is the key known to A and B, and no public person knows k.
+
+m = message.
+
+A will send c = E(k,m)
+B receives c over the Internet/Encrypted File System.
+B plugs c in decryption algorithm D(k,c) = m
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Famous egs:
+
+SUBSTITUTION CIPHER:
+
+1)Substitution cipher , "abc" = "zxy". Can be easily broken.
+2) Caesar Cipher, shift by 3. 'a' becomes 'd' . 'b' becomes 'e'
+NO KEY IN ABOVE!
+
+Random substituion cipher examples and how to break:
+
+KEY SPACE = Permutation of all possible combinations for a key
+
+BREAKING A SUBSTITUTION CIPHER:
+
+1) Know letter frequency eg. A, E, O
+2) Frrequency of pairs of letters eg. HE, TH, OO, LE, TE
+
+VIGENER CIPHER:
+
+k = a word = CRYPTO
+
+m = WHATANICEDAYTODAY
+c = m + k + mod26
+
+To decrypt, replicate the cipher text and subtract k from c to obtain m. m = c - k
+
+HOW TO BREAK?
+
+We need to know the length of the key and break c into groups of key length.
+
+eg. c = ZZZJUCLUCS. so break "ZZZJUC" as k = CRYPTO
+
+1) Look at first letter every 6 letters. They are all encrypted using C.
+2) Let us say most common letter is x from c. Once we know that we can do x - "most common letter in english which is E" = first letter of key.
+3) Repeat for every key letter. We can obtain the VIGENER CIPHER KEYs.
+
+ROTOR MACHINE KEYS:
+
+Keys keep changing two dimensionally each time a message is entered.
+
+DES (1974) : Key Space = 2^56, Block Size = 64
+
+Today we use: AES(128 bit), Salsa-20
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+CIPHER DEFINITION contains (K,     M,       C)
+							|      |        |
+							Key    message  cipher text
+
+							E: K,M --> C
+							D: K,C --> M
+EFFICIENT ALGORITHM --> POLYNOMIAL or runs within a specific time period
+E is often RANDOM. D is generally DETERMINISTIC
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ONE TIME PAD:
+
+Key = random number of bits which is longer than the length of message string
+
+C = K XOR M
+M = K XOR C
+
+ENCRYPTION AND DECRYTION ALGORITHMS are the same here!
+
+key = K = M XOR C (BROKEN) 
+
+DISADV:
+
+Key is longer than message! Else it won't work!
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+STREAM CIPHER:
+
+Instead of random key, we use a pseudorandom key.
+
+Pseudorandom Generator: We take a s bit seed and map it to n bit key string.
+
+!! We need determistic algorithm to calculate PRNG !!
+!! OUTPUT also needs to look random. What is random though? !!
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+PRG needs to be unpredictable always!
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+NON NEGLIGIBLE:
+
+e >= 1/2^30 or if e >= 1/y^d for y sufficiently large
+
+NEGLIGIBLE:
+
+e <= 1/2^80 or if e <= 1/y^d for y sufficiently large 
+
+The function is said to be written over security considerations
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+ATTACKS ON OTP:
+
+ATTACK-1:
+
+If same key is used twice for 2 different messages, it can be attacked!
+
+If c1 = m1 XOR k
+If c2 = m2 XOR k
+
+Then m1 xor m2 = c1 XOR c2 (ATTACK is easy here) with ENGLISH ASCII we can obtain m1 and m2
+
+802.11B WEP attack using two time pad -- HOW IT WORKS. Repeat of IV (appended to key k) every 2^24 frames.
+
+[Disk Encryption]:
+
+Different files can have same contents with small changes. If same key is used, attacker can know where the changes are made on the file and decrypt the file content.
+
+ATTACK-2:
+
+!! NO INTEGRITY !! (OTP is malleable)
+
+TX SIDE: c = m xor k
+ATTACKER: c xor p
+
+RX SIDE: (c xor p) xor k = m xor p
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+REAL WORLD STREAM CIPHERS:
+
+1) RC4
+
+
+
+
+
+
+
+
