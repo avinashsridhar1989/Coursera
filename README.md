@@ -1,4 +1,4 @@
-Coursera
+Coursera Cryptography-1 Programming
 ========
 
 Coursera Programming Work for Cryptography-1 is uploaded here
