@@ -1,3 +1,8 @@
+#!/usr/bin/env python
+#  blitzavi89
+# ----------------------------------------------------------------
+# COURSERA CRYPTOGRAPHY-1 PROGRAMMING ASSIGNMENT-2 (Python 3.x)
+# ----------------------------------------------------------------
 from Crypto.Cipher import AES
 from Crypto.Util import Counter
 import binascii
